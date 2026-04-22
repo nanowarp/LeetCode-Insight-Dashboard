@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🚀 LeetTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#0a0e1a;
+    --surface:#0f1628;
+    --surface2:#141d35;
+    --border:#1e2d50;
+    --accent:#f97316;
+    --accent2:#3b82f6;
+    --green:#22c55e;
+    --yellow:#eab308;
+    --red:#ef4444;
+    --text:#e2e8f0;
+    --muted:#64748b;
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Space Grotesk',sans-serif;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+ 
+  /* NAVBAR */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,14,26,0.95);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+  .logo{font-family:var(--mono);font-weight:700;font-size:1.1rem;color:var(--accent);letter-spacing:0.05em;}
+  .logo span{color:var(--text);}
+ 
+  /* HERO */
+  .hero{text-align:center;padding:56px 24px 32px;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(59,130,246,0.08),transparent);}
+  .hero h1{font-size:2.4rem;font-weight:700;letter-spacing:-0.02em;}
+  .hero p{color:var(--muted);margin-top:10px;font-size:0.95rem;}
+ 
+  /* SEARCH BAR */
+  .search-wrap{display:flex;gap:10px;max-width:540px;margin:32px auto 0;padding:0 16px;}
+  .search-wrap input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+  .search-wrap input:focus{border-color:var(--accent2);}
+  .search-wrap input::placeholder{color:var(--muted);}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px 22px;font-family:var(--sans);font-weight:600;font-size:0.9rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn:hover{opacity:0.85;}
+  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+  .btn-outline:hover{border-color:var(--accent2);opacity:1;}
+ 
+  /* MAIN LAYOUT */
+  .main{max-width:1100px;margin:40px auto;padding:0 24px;display:flex;flex-direction:column;gap:24px;}
+ 
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;}
+  .card-title{font-family:var(--mono);font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;}
+ 
+  /* STATS ROW */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+  .stat-box .num{font-family:var(--mono);font-size:2.2rem;font-weight:700;color:var(--text);}
+  .stat-box .label{font-size:0.8rem;color:var(--muted);margin-top:6px;}
+  .stat-box.easy .num{color:var(--green);}
+  .stat-box.medium .num{color:var(--yellow);}
+  .stat-box.hard .num{color:var(--red);}
+ 
+  /* TWO COL */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;}
+ 
+  /* TAGS */
+  .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .tag{background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:var(--accent2);border-radius:6px;padding:4px 10px;font-size:0.8rem;font-family:var(--mono);}
+  .tag.weak{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:var(--red);}
+ 
+  /* INTEGRITY */
+  .integrity-score{display:flex;align-items:center;gap:20px;margin-top:8px;}
+  .big-score{font-family:var(--mono);font-size:3rem;font-weight:700;color:var(--green);}
+  .score-bar{flex:1;height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;}
+  .score-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--green),#16a34a);border-radius:99px;}
+  .flag-link{color:var(--accent2);font-size:0.85rem;text-decoration:underline;cursor:pointer;margin-top:8px;display:inline-block;}
+ 
+  /* SUBMISSIONS TABLE */
+  table{width:100%;border-collapse:collapse;margin-top:8px;}
+  th{font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);}
+  td{padding:10px 12px;font-size:0.875rem;border-bottom:1px solid rgba(30,45,80,0.5);}
+  tr:last-child td{border-bottom:none;}
+  .diff-easy{color:var(--green);font-family:var(--mono);font-size:0.8rem;}
+  .diff-medium{color:var(--yellow);font-family:var(--mono);font-size:0.8rem;}
+  .diff-hard{color:var(--red);font-family:var(--mono);font-size:0.8rem;}
+  .status-ac{color:var(--green);font-family:var(--mono);font-size:0.8rem;}
+ 
+  /* READINESS METER */
+  .readiness-list{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+  .readiness-item{display:flex;flex-direction:column;gap:4px;}
+  .readiness-label{font-size:0.82rem;color:var(--text);display:flex;justify-content:space-between;}
+  .readiness-label span{color:var(--muted);font-family:var(--mono);}
+  .bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;}
+  .bar-fill.high{background:var(--green);}
+  .bar-fill.mid{background:var(--yellow);}
+  .bar-fill.low{background:var(--red);}
+ 
+  /* MOCK INTERVIEW SECTION */
+  .mock-section{background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(59,130,246,0.08));border:1px solid rgba(249,115,22,0.2);border-radius:14px;padding:32px;text-align:center;}
+  .mock-section h2{font-size:1.4rem;font-weight:700;margin-bottom:10px;}
+  .mock-section p{color:var(--muted);font-size:0.9rem;max-width:480px;margin:0 auto 20px;}
+  .btn-start{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px 32px;font-family:var(--sans);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px rgba(249,115,22,0.3);}
+  .btn-start:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(249,115,22,0.5);}
+ 
+  /* INTERVIEW PANEL (hidden by default) */
+  .interview-panel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;}
+  .interview-panel.active{display:block;}
+  .interview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+  .interview-header h2{font-size:1.2rem;font-weight:700;}
+  .timer{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--accent);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 24px;}
+  .problem-title{font-size:1.1rem;font-weight:600;color:var(--accent2);margin-bottom:8px;}
+  .problem-meta{display:flex;gap:12px;margin-bottom:20px;}
+  .badge{font-family:var(--mono);font-size:0.75rem;padding:4px 10px;border-radius:6px;}
+  .badge.medium{background:rgba(234,179,8,0.15);color:var(--yellow);border:1px solid rgba(234,179,8,0.3);}
+  .code-area{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:20px;font-family:var(--mono);font-size:0.85rem;color:var(--muted);min-height:200px;white-space:pre;}
+  .btn-danger{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 20px;font-family:var(--sans);font-weight:600;font-size:0.9rem;cursor:pointer;margin-top:20px;transition:all 0.2s;}
+  .btn-danger:hover{background:rgba(239,68,68,0.25);}
+ 
+  /* ANALYZING STATE */
+  .analyzing{color:var(--muted);font-family:var(--mono);font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);display:inline-block;animation:pulse 1.4s infinite;}
+  .dot:nth-child(2){animation-delay:0.2s;}
+  .dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes pulse{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
+ 
+  @media(max-width:768px){
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .two-col,.three-col{grid-template-columns:1fr;}
+    .hero h1{font-size:1.6rem;}
+  }
+</style>
+</head>
+<body>
+ 
+<nav>
+  <div class="logo">🚀 Leet<span>Track</span></div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn btn-outline" style="padding:8px 16px;font-size:0.85rem;">Sign In</button>
+  </div>
+</nav>
+ 
+<div class="hero">
+  <h1>🚀 LeetTrack</h1>
+  <p>Deep dive into a candidate's performance, integrity, and career path.</p>
+  <div class="search-wrap">
+    <input type="text" id="usernameInput" placeholder="Enter LeetCode username..." />
+    <button class="btn" onclick="analyze()">Analyze</button>
+  </div>
+  <div id="errMsg" style="display:none;color:var(--red);font-family:var(--mono);font-size:0.85rem;margin-top:14px;"></div>
+</div>
+ 
+<div class="main" id="dashboard" style="display:none;">
+ 
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="num" id="total">0</div>
+      <div class="label">Total Solved</div>
+    </div>
+    <div class="stat-box easy">
+      <div class="num" id="easy">0</div>
+      <div class="label">Easy</div>
+    </div>
+    <div class="stat-box medium">
+      <div class="num" id="medium">0</div>
+      <div class="label">Medium</div>
+    </div>
+    <div class="stat-box hard">
+      <div class="num" id="hard">0</div>
+      <div class="label">Hard</div>
+    </div>
+  </div>
+ 
+  <!-- STRENGTHS + NEEDS WORK -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">🏅 Top Strengths</div>
+      <div class="tag-list" id="strengths"><span style="color:var(--muted);font-size:0.82rem;">Analyze a profile to see strengths.</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏗️ Needs Work</div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:8px;">Core fundamentals with lowest solve count</p>
+      <div class="tag-list" id="weaknesses"><span style="color:var(--muted);font-size:0.82rem;">Analyze a profile to see weak areas.</span></div>
+    </div>
+  </div>
+ 
+  <!-- JOB READINESS + INTEGRITY -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">🎯 Job Readiness</div>
+      <div class="readiness-list" id="readinessList"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🛡️ Integrity Monitor</div>
+      <div class="integrity-score">
+        <div class="big-score" id="integrity">100</div>
+        <div style="flex:1;">
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">/ 100</div>
+          <div class="score-bar"><div class="score-fill" id="integrityBar"></div></div>
+          <div style="font-size:0.78rem;color:var(--green);margin-top:6px;">No suspicious patterns detected</div>
+        </div>
+      </div>
+      <a class="flag-link">View Suspicious Flags Log</a>
+    </div>
+  </div>
+ 
+  <!-- SUBMISSIONS TABLE -->
+  <div class="card">
+    <div class="card-title">Recent Accepted Submissions Log</div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Problem</th>
+          <th>Difficulty</th>
+          <th>Status</th>
+          <th>Runtime</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="submissions">
+        <tr><td colspan="6" style="color:var(--muted);font-size:0.85rem;text-align:center;padding:24px;">No submissions loaded yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+ 
+  <!-- MOCK INTERVIEW -->
+  <div class="mock-section">
+    <h2>⏱️ High-Pressure Mock Interview</h2>
+    <p>Immerse yourself into a live 45-minute technical screener featuring an unseen Medium problem perfectly calibrated to a targeted FAANG company blueprint.</p>
+    <button class="btn-start" onclick="startInterview()">Start Live Mock Interview</button>
+  </div>
+ 
+  <!-- INTERVIEW PANEL -->
+  <div class="interview-panel" id="interviewPanel">
+    <div class="interview-header">
+      <h2>⏱️ Phase: Technical Screener</h2>
+      <div class="timer" id="timer">45:00</div>
+    </div>
+    <div class="problem-title">Two Sum</div>
+    <div class="problem-meta">
+      <span class="badge medium">Medium</span>
+      <span style="font-family:var(--mono);font-size:0.8rem;color:var(--muted);">Arrays · Hash Map</span>
+    </div>
+    <div class="code-area">// Your solution here
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        
+    }
+}</div>
+    <div style="margin-top:16px;display:flex;justify-content:flex-end;">
+      <button class="btn-danger" onclick="endInterview()">🚨 Conclude Screener &amp; Return to Dashboard</button>
+    </div>
+  </div>
+ 
+</div>
+ 
+<!-- LOADING STATE -->
+<div class="main" id="loading" style="display:none;text-align:center;padding:60px 0;">
+  <div class="analyzing">
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    Analyzing directly from LeetCode matrix...
+  </div>
+</div>
+ 
+<script>
+  let timerInterval=null;
+  let seconds=45*60;
+ 
+  // ── LeetCode GraphQL via public proxy ──────────────────────────────────────
+  const PROXY='https://leetcode-stats-api.herokuapp.com/';
+  // We use two sources:
+  // 1. leetcode-stats-api (heroku) → solved counts + tag breakdown
+  // 2. alfa-leetcode-api (vercel)  → recent submissions
+ 
+  async function fetchStats(username){
+    const r=await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+    if(!r.ok) throw new Error('User not found');
+    return r.json();
+  }
+ 
+  async function fetchRecent(username){
+    try{
+      const r=await fetch(`https://alfa-leetcode-api.onrender.com/${username}/submission`);
+      if(!r.ok) return [];
+      const d=await r.json();
+      return d.submission||[];
+    }catch{return [];}
+  }
+ 
+  async function fetchTagData(username){
+    try{
+      const r=await fetch(`https://alfa-leetcode-api.onrender.com/skillStats/${username}`);
+      if(!r.ok) return null;
+      return r.json();
+    }catch{return null;}
+  }
+ 
+  // ── Main analyze ───────────────────────────────────────────────────────────
+  async function analyze(){
+    const u=document.getElementById('usernameInput').value.trim();
+    if(!u) return;
+    document.getElementById('loading').style.display='block';
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('errMsg').style.display='none';
+    try{
+      const [stats,recent,tags]=await Promise.all([
+        fetchStats(u),
+        fetchRecent(u),
+        fetchTagData(u)
+      ]);
+      if(stats.status==='error') throw new Error(stats.message||'User not found');
+      renderDashboard(stats,recent,tags);
+      document.getElementById('loading').style.display='none';
+      document.getElementById('dashboard').style.display='flex';
+    }catch(e){
+      document.getElementById('loading').style.display='none';
+      const err=document.getElementById('errMsg');
+      err.textContent='⚠️ '+( e.message||'Could not fetch data. Check username.');
+      err.style.display='block';
+    }
+  }
+ 
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function renderDashboard(stats,recent,tags){
+    // Stats
+    document.getElementById('total').textContent=stats.totalSolved||0;
+    document.getElementById('easy').textContent=stats.easySolved||0;
+    document.getElementById('medium').textContent=stats.mediumSolved||0;
+    document.getElementById('hard').textContent=stats.hardSolved||0;
+ 
+    // Acceptance rate → integrity proxy (fun metric)
+    const acc=parseFloat(stats.acceptanceRate)||95;
+    const integrity=Math.min(100,Math.round(acc));
+    document.getElementById('integrity').textContent=integrity;
+    document.getElementById('integrityBar').style.width=integrity+'%';
+    const intColor=integrity>=80?'var(--green)':integrity>=60?'var(--yellow)':'var(--red)';
+    document.getElementById('integrity').style.color=intColor;
+    document.getElementById('integrityBar').style.background=intColor;
+ 
+    // Readiness (derived from solved counts)
+    const total=stats.totalSolved||0;
+    const hard=stats.hardSolved||0;
+    const medium=stats.mediumSolved||0;
+    const faang=Math.min(100,Math.round((hard*3+medium*1.5)/8));
+    const startup=Math.min(100,Math.round((medium*2+total*0.3)/7));
+    const entry=Math.min(100,Math.round(total/4));
+    const senior=Math.min(100,Math.round(hard*2.5));
+    renderReadiness([
+      {label:'FAANG',val:faang},
+      {label:'Startup / Mid-size',val:startup},
+      {label:'Entry Level',val:entry},
+      {label:'Senior / Staff',val:senior},
+    ]);
+ 
+    // Tags
+    if(tags&&tags.data&&tags.data.matchedUser){
+      const adv=(tags.data.matchedUser.tagProblemCounts.advanced||[]).slice(0,3);
+      const inter=(tags.data.matchedUser.tagProblemCounts.intermediate||[]).slice(0,4);
+      const fund=(tags.data.matchedUser.tagProblemCounts.fundamental||[]);
+      const strong=[...adv,...inter].sort((a,b)=>b.problemsSolved-a.problemsSolved).slice(0,6);
+      const weak=fund.sort((a,b)=>a.problemsSolved-b.problemsSolved).slice(0,4);
+      document.getElementById('strengths').innerHTML=strong.map(t=>`<span class="tag">${t.tagName} <span style="opacity:0.6">${t.problemsSolved}</span></span>`).join('');
+      document.getElementById('weaknesses').innerHTML=weak.map(t=>`<span class="tag weak">${t.tagName} <span style="opacity:0.6">${t.problemsSolved}</span></span>`).join('');
+    }
+ 
+    // Submissions
+    const tbody=document.getElementById('submissions');
+    if(recent.length===0){
+      tbody.innerHTML=`<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px;">No recent submissions found (profile may be private).</td></tr>`;
+      return;
+    }
+    const timeAgo=ts=>{
+      const d=(Date.now()/1000)-ts;
+      if(d<3600) return Math.round(d/60)+'m ago';
+      if(d<86400) return Math.round(d/3600)+'h ago';
+      return Math.round(d/86400)+'d ago';
+    };
+    tbody.innerHTML=recent.slice(0,10).map(s=>{
+      const diff=(s.difficulty||'').toLowerCase();
+      return `<tr>
+        <td style="color:var(--muted);font-family:var(--mono);font-size:0.8rem;">${s.titleSlug?s.titleSlug.split('-')[0]:'-'}</td>
+        <td><a href="https://leetcode.com/problems/${s.titleSlug}" target="_blank" style="color:var(--text);text-decoration:none;">${s.title||s.titleSlug}</a></td>
+        <td><span class="diff-${diff}">${s.difficulty||'—'}</span></td>
+        <td><span class="status-ac">${s.statusDisplay||'Accepted'}</span></td>
+        <td style="font-family:var(--mono);font-size:0.8rem;color:var(--muted);">${s.runtime||'—'}</td>
+        <td style="font-size:0.8rem;color:var(--muted);">${s.timestamp?timeAgo(s.timestamp):'—'}</td>
+      </tr>`;
+    }).join('');
+  }
+ 
+  function renderReadiness(items){
+    document.getElementById('readinessList').innerHTML=items.map(i=>{
+      const cls=i.val>=70?'high':i.val>=40?'mid':'low';
+      return `<div class="readiness-item">
+        <div class="readiness-label">${i.label} <span>${i.val}%</span></div>
+        <div class="bar"><div class="bar-fill ${cls}" style="width:${i.val}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+ 
+  // ── Interview timer ────────────────────────────────────────────────────────
+  function startInterview(){
+    document.querySelector('.mock-section').style.display='none';
+    document.getElementById('interviewPanel').classList.add('active');
+    seconds=45*60;
+    updateTimerDisplay();
+    timerInterval=setInterval(()=>{
+      seconds--;
+      if(seconds<=0){clearInterval(timerInterval);seconds=0;}
+      updateTimerDisplay();
+    },1000);
+  }
+ 
+  function endInterview(){
+    clearInterval(timerInterval);
+    document.getElementById('interviewPanel').classList.remove('active');
+    document.querySelector('.mock-section').style.display='block';
+  }
+ 
+  function updateTimerDisplay(){
+    const m=Math.floor(seconds/60).toString().padStart(2,'0');
+    const s=(seconds%60).toString().padStart(2,'0');
+    document.getElementById('timer').textContent=`${m}:${s}`;
+    if(seconds<300) document.getElementById('timer').style.color='var(--red)';
+  }
+ 
+  document.getElementById('usernameInput').addEventListener('keydown',e=>{
+    if(e.key==='Enter') analyze();
+  });
+</script>
+ 
+</body>
+</html>
