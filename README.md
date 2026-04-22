@@ -33,11 +33,5 @@ LeetTrack is an advanced LeetCode profile analyzer that helps users understand c
 
 ## 🚀 Live Demo
 
-(Add GitHub Pages Link Here)
+[(Add GitHub Pages Link Here)](https://nanowarp.github.io/LeetCode-Insight-Dashboard/)
 
-## 📂 Installation
-
-```bash
-git clone https://github.com/yourusername/leettrack.git
-cd leettrack
-open index.html
