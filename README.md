@@ -27,6 +27,8 @@ LeetTrack is an advanced LeetCode profile analyzer that helps users understand c
 ## 📸 Preview
 
 <img width="1918" height="861" alt="image" src="https://github.com/user-attachments/assets/4aa63e0c-2a4f-4cf6-9736-c1a5b15bfddd" />
+<img width="1918" height="868" alt="image" src="https://github.com/user-attachments/assets/4ab1e5be-ba51-4b53-a025-669adebf200e" />
+
 
 
 ## 🚀 Live Demo
