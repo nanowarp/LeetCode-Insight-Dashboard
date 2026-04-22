@@ -270,16 +270,26 @@ class Solution {
   let seconds=45*60;
  
   // ── LeetCode GraphQL via public proxy ──────────────────────────────────────
-  const PROXY='https://leetcode-stats-api.herokuapp.com/';
+  // const PROXY='https://leetcode-stats-api.herokuapp.com/';
+  const PROXY = 'https://leetcode-api-faisalshohag.vercel.app/';
   // We use two sources:
   // 1. leetcode-stats-api (heroku) → solved counts + tag breakdown
   // 2. alfa-leetcode-api (vercel)  → recent submissions
  
-  async function fetchStats(username){
-    const r=await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
-    if(!r.ok) throw new Error('User not found');
-    return r.json();
-  }
+  // async function fetchStats(username){
+  //   const r=await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+  //   if(!r.ok) throw new Error('User not found');
+  //   return r.json();
+  // }
+  async function fetchStats(username) {
+      const r = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${username}`);
+
+      if (!r.ok) {
+        throw new Error("User not found");
+      }
+
+      return await r.json();
+    }
  
   async function fetchRecent(username){
     try{
